@@ -1,13 +1,11 @@
 import numpy as np
-from sklearn import linear_model
 
 X = np.array([[0, 1], [1, 1], [2, 1]])
-y = np.array([0, 1, 2])
+y = np.array([1, 2, 3])
 
 class LinearModel():
     """Linear model from 
-        coefficient parameters and
-        intercept parameter"""
+        coefficient and intercept parameters"""
 
     def __init__(self):
         self.coeff = np.array([])
@@ -32,10 +30,14 @@ class LinearRegression(LinearModel):
         LinearModel.__init__(self)
 
     def fit(self, X, y):
+        "Ax = y; A is training set appended by column of 1's; y is target vector"
+        A = np.vstack([X.T, np.ones(len(X))]).T
+        m = np.linalg.lstsq(A, y, rcond = None)[0]
+        self.set_coeff(m[0:len(m)-1])
+        self.set_intercept(m[len(m)-1])
         
-        pass
         
 lm = LinearRegression()
 
-lm.set_coeff(np.array([1, 1]))
-op = lm.predict(X)
+lm.fit(X, y)
+print(lm.predict(X))
